@@ -1,4 +1,5 @@
 package com.vuducminh.stylash.model;
+import com.vuducminh.stylash.user.User;
 
 import jakarta.persistence.*;
 

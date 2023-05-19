@@ -1,7 +1,7 @@
 package com.vuducminh.stylash.controller;
 
-import com.vuducminh.stylash.model.User;
 import com.vuducminh.stylash.service.UserService;
+import com.vuducminh.stylash.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable Long userId) {
+    public User getUserById(@PathVariable Integer userId) {
         return userService.getUserById(userId);
     }
 
@@ -34,13 +34,13 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public User updateUser(@PathVariable Long userId, @RequestBody User user) {
+    public User updateUser(@PathVariable Integer userId, @RequestBody User user) {
         user.setId(userId);
         return userService.updateUser(user);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId) {
+    public void deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
     }
 }

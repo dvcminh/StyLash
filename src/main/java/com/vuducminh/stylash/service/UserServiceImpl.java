@@ -1,7 +1,7 @@
 package com.vuducminh.stylash.service;
 
-import com.vuducminh.stylash.model.User;
-import com.vuducminh.stylash.repository.UserRepository;
+import com.vuducminh.stylash.user.User;
+import com.vuducminh.stylash.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long userId) {
+    public User getUserById(Integer userId) {
         return userRepository.findById(userId).orElse(null);
     }
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public void deleteUser(Integer userId) {
         userRepository.deleteById(userId);
     }
 }
