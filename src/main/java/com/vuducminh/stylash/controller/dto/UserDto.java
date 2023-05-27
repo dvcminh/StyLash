@@ -3,8 +3,7 @@ package com.vuducminh.stylash.controller.dto;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public record UserDto(Long id, String username, String name, String email, String role, List<OrderDto> orders) {
-
-    public record OrderDto(String id, String description, ZonedDateTime createdAt) {
+public record UserDto(Integer id, String email, String firstname, String lastname) {
+    public record OrderDto(String id, String orderStatus) {
     }
 }
