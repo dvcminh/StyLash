@@ -2,8 +2,10 @@
 # JDBC properties
 #
 spring:
+  application:
+    name: StyLash
   datasource:
-    url: jdbc:mysql://localhost:3306/stylash
+    url: jdbc:mysql://localhost:3306/stylash_database
     username: springstudent
     password: springstudent
 
