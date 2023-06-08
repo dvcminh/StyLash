@@ -5,7 +5,10 @@ import com.vuducminh.stylash.user.User;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +20,18 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/me")
-    public User getAllUsers() {
-        return userService.getUserById(1);
-    }
+//    @GetMapping("/me")
+//    public ResponseEntity<User> getAllUsers() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
+//        User user = userService.getUserByEmail("mvu7179@gmail.com");
+//        return ResponseEntity.ok(user);
+//    }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable Integer userId) {
-        return userService.getUserById(userId);
+    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping

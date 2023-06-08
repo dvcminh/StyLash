@@ -1,5 +1,7 @@
 package com.vuducminh.stylash.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vuducminh.stylash.config.CloudinaryConfig;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 
 @Data
 @Builder
@@ -18,7 +21,6 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
     private Integer id;
 
     private String name;
@@ -27,17 +29,18 @@ public class Product {
 
     private BigDecimal price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    private String image_url;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public Product(String name, String description, BigDecimal price, Category category) {
+    public Product(String name, String description, BigDecimal price, String image_url, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.image_url = image_url;
         this.category = category;
     }
-
-
-    // Other methods
 }

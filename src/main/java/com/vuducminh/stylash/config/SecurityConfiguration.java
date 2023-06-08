@@ -58,10 +58,15 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers(
                         "/api/v1/auth/**",
+                        "/api/products/**",
+                        "/api/orders/**",
+                        "/categories",
+                        "/api/order_items/**",
+                        "/api/vouchers/**",
                         "/v2/api-docs",
                         "/v3/api-docs",
                         "/v3/api-docs/**",
-                        "/users",
+                        "/users/**",
                         "/swagger-resources",
                         "/swagger-resources/**",
                         "/configuration/ui",
@@ -71,7 +76,6 @@ public class SecurityConfiguration {
                         "/swagger-ui.html"
                 )
                 .permitAll()
-
 
                 .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
 

@@ -2,21 +2,18 @@ package com.vuducminh.stylash.controller;
 
 import com.vuducminh.stylash.model.Category;
 import com.vuducminh.stylash.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
-
-    @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     public List<Category> getAllCategories() {
@@ -24,7 +21,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public Category getCategoryById(@PathVariable Long categoryId) {
+    public Category getCategoryById(@PathVariable Integer categoryId) {
         return categoryService.getCategoryById(categoryId);
     }
 

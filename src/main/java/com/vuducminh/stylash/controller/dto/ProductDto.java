@@ -1,4 +1,7 @@
 package com.vuducminh.stylash.controller.dto;
 
-public record ProductDto(String id) {
+public record ProductDto(Integer id, String name, byte[] image) {
+
+//    public record CategoryDto(String username) {
+//    }
 }

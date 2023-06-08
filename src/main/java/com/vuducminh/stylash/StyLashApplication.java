@@ -7,6 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.cloudinary.*;
+import com.cloudinary.utils.ObjectUtils;
+import io.github.cdimascio.dotenv.Dotenv;
+
+import java.util.Map;
+
 import static com.vuducminh.stylash.user.Role.ADMIN;
 import static com.vuducminh.stylash.user.Role.MANAGER;
 

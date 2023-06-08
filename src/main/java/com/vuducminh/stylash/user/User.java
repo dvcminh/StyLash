@@ -27,6 +27,17 @@ public class User implements UserDetails {
   private String email;
   private String firstname;
   private String lastname;
+  private String phone_number;
+  private String address;
+
+  public User(Integer id, String email, String firstname, String lastname, String phone_number, String address) {
+    this.id = id;
+    this.email = email;
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.phone_number = phone_number;
+    this.address = address;
+  }
 
   @Enumerated(EnumType.STRING)
   private Role role;

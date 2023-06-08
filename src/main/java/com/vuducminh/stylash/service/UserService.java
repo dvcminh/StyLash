@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
     List<User> getAllUsers();
+    public Optional<User> getAuthenticatedUser();
 
     User getUserById(Integer userId);
     User validateAndGetUserByUsername(String username);
