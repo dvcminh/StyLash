@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class RegisterRequest {
 
+  private String avatar;
   private String firstname;
   private String lastname;
   private String email;

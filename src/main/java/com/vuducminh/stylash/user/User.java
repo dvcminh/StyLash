@@ -29,6 +29,7 @@ public class User implements UserDetails {
   private String lastname;
   private String phone_number;
   private String address;
+  private String avatar;
 
   public User(Integer id, String email, String firstname, String lastname, String phone_number, String address) {
     this.id = id;

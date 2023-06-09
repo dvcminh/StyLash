@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Blob;
+import java.util.List;
 
 @Data
 @Builder
@@ -35,6 +36,10 @@ public class Product {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
+
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//    @OneToMany(mappedBy = "product")
+//    private List<Like> likes;
 
     public Product(String name, String description, BigDecimal price, String image_url, Category category) {
         this.name = name;

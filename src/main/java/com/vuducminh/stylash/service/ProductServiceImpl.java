@@ -3,6 +3,7 @@ package com.vuducminh.stylash.service;
 import com.cloudinary.Cloudinary;
 import com.vuducminh.stylash.model.Category;
 import com.vuducminh.stylash.model.Product;
+import com.vuducminh.stylash.repository.LikeRepository;
 import com.vuducminh.stylash.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final Cloudinary cloudinary;
+    private final LikeRepository likeRepository;
 
     public String uploadProductImage(MultipartFile imageFile) throws IOException {
         Map<String, String> params = new HashMap<>();
@@ -48,6 +50,11 @@ public class ProductServiceImpl implements ProductService {
 
         return productRepository.save(product);
     }
+
+//    @Override
+//    public int getLikeCountForProduct(Product product) {
+//        return likeRepository.countByProduct(product);
+//    }
 
     @Override
     public List<Product> viewAllByCategory() {

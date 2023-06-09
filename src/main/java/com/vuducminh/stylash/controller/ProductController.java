@@ -60,6 +60,12 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+//    @GetMapping("/countLike/{productId}")
+//    public ResponseEntity<List<Like>> countProductLike(@PathVariable Integer productId) {
+//        Product product = productService.viewById(productId);
+//        List<Like> listLike= likeService.findLikeByProduct(product);
+//        return ResponseEntity.ok(listLike);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") int id) {

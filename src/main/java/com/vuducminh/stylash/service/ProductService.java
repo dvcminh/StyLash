@@ -17,4 +17,5 @@ public interface ProductService {
     List<Product> findProductsByCategoryName(String categoryName);
     Product viewById(int id);
     Product save(Product product);
+//    int getLikeCountForProduct(Product product);
 }
