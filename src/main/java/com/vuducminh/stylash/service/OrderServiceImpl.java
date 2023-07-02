@@ -1,24 +1,36 @@
 package com.vuducminh.stylash.service;
 
+import com.vuducminh.stylash.controller.dto.DailyRevenueDTO;
 import com.vuducminh.stylash.model.Order;
-import com.vuducminh.stylash.model.OrderItem;
-import com.vuducminh.stylash.model.Product;
 import com.vuducminh.stylash.repository.OrderItemRepository;
 import com.vuducminh.stylash.repository.OrderRepository;
 import com.vuducminh.stylash.user.User;
-import com.vuducminh.stylash.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+
+    private final UserService userService;
+
+    @Override
+    public List<Order> viewAll() {
+        return orderRepository.findAll();
+    }
+
+//    @Override
+//    public List<Order> getOrders() {
+//        return orderRepository.findAllByOrderByOrderDateAtDesc();
+//    }
+
     @Override
     public Order createOrder(Order order) {
         return orderRepository.save(order);
@@ -29,31 +41,52 @@ public class OrderServiceImpl implements OrderService{
         return orderRepository.findById(id).get();
     }
 
+
     @Override
-    public Order createOrderFromCartItems(List<Product> cartItems, User user) {
-        // Tạo đơn hàng mới
-        Order order = new Order();
-        order.setUser(user);
-        order.setOrderDate(LocalDateTime.now());
-        order.setPaymentStatus("Pending"); // Trạng thái thanh toán chờ xử lý
-        order.setShippingAddress(user.getAddress());
+    public List<Order> getOrdersByUser(User user) {
+        return orderRepository.findByUser(user);
+    }
 
-        // Tính tổng giá trị đơn hàng
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        for (Product cartItem : cartItems) {
-            totalAmount = totalAmount.add(cartItem.getPrice());
+    @Override
+    public List<DailyRevenueDTO> calculateDailyRevenue() {
+        List<Order> orders = orderRepository.findAll();
+
+        List<Order> sortedOrders = orders.stream()
+                .sorted(Comparator.comparing(Order::getOrderDate).reversed())
+                .collect(Collectors.toList());
+
+        List<Order> recentOrders = sortedOrders.stream()
+                .limit(14)
+                .toList();
+
+        // Group recent orders by date and calculate total revenue for each date
+        Map<LocalDate, BigDecimal> revenueByDate = recentOrders.stream()
+                .collect(Collectors.groupingBy(order -> order.getOrderDate().toLocalDate(),
+                        Collectors.mapping(Order::getTotalAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+
+        List<DailyRevenueDTO> dailyRevenues = new ArrayList<>();
+        for (Map.Entry<LocalDate, BigDecimal> entry : revenueByDate.entrySet()) {
+            DailyRevenueDTO dailyRevenue = new DailyRevenueDTO();
+            dailyRevenue.setDate(entry.getKey());
+            dailyRevenue.setRevenue(entry.getValue());
+            dailyRevenues.add(dailyRevenue);
         }
-        order.setTotalAmount(totalAmount);
 
-        // Lưu đơn hàng vào cơ sở dữ liệu
-        orderRepository.save(order);
+        return dailyRevenues;
+    }
 
-        // Lưu các mục trong giỏ hàng vào bảng order_item
-        for (Product cartItem : cartItems) {
-            OrderItem orderItem = new OrderItem(order, cartItem, 1, cartItem.getPrice());
-            orderItemRepository.save(orderItem);
-        }
 
-        return order;
+
+    @Override
+    public BigDecimal calculateTotalRevenue() {
+        return orderRepository.findAll().stream()
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public List<Order> getOrdersContainingText(String text) {
+        User user = userService.validateAndGetUserByUsername(text);
+        return orderRepository.findByUser(user);
     }
 }

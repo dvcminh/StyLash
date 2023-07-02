@@ -12,6 +12,8 @@ public interface UserService {
     User getUserById(Integer userId);
     User validateAndGetUserByUsername(String username);
 
+    int countManagers();
+
     Optional<User> getUserByUsername(String username);
 
     User getUserByEmail(String email);

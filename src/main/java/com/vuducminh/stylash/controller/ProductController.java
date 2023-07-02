@@ -42,6 +42,11 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getProductCount() {
+        return ResponseEntity.ok(productService.viewAll().size());
+    }
+
     @GetMapping("/top-liked-products")
     public ResponseEntity<List<Product>> getTopLikedProducts() {
         List<Product> products = productService.getTopLikedProducts();

@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -32,6 +32,11 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/countUsers")
+    public ResponseEntity<Integer> countUsers() {
+        return ResponseEntity.ok(userService.countManagers());
     }
 
     @PostMapping

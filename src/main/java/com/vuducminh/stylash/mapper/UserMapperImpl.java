@@ -15,6 +15,6 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 //       List<UserDto.OrderDto> orders = user.getOrders().stream().map(this::toUserDtoOrderDto).toList();
-        return new UserDto(user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getPhone_number(), user.getAddress());
+        return new UserDto(user.getId(), user.getUsername(), user.getFirstname(), user.getLastname(), user.getPhone_number(), user.getAddress(), user.getAvatar(), user.getRole());
     }
 }

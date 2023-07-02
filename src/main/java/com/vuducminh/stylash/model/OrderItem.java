@@ -30,6 +30,8 @@ public class OrderItem {
     private Product product;
     private Integer quantity;
     private BigDecimal pricePerUnit;
+    private Integer voucherValue;
+    private Integer shippingValue;
 
     public OrderItem(Order order, Product product, Integer quantity, BigDecimal pricePerUnit) {
         this.order = order;
