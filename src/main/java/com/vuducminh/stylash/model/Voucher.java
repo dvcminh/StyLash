@@ -31,5 +31,11 @@ public class Voucher {
 
     private String description;
 
-    // Constructors, getters, and setters
+    public Voucher(String code, BigDecimal discount, LocalDate expirationDate, String title, String description) {
+        this.code = code;
+        this.discount = discount;
+        this.expirationDate = expirationDate;
+        this.title = title;
+        this.description = description;
+    }
 }

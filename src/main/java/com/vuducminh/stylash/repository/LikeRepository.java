@@ -6,6 +6,8 @@ import com.vuducminh.stylash.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Integer> {
 
@@ -14,4 +16,6 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
     boolean existsByUserAndProduct(User user, Product product);
 
     int countByProduct(Product product);
+
+    List<Like> findByUserEmailContaining(String name);
 }

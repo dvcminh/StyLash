@@ -1,7 +1,9 @@
 package com.vuducminh.stylash.controller.dto;
 
-public record ProductDto(Integer id, String name, byte[] image) {
+import java.math.BigDecimal;
 
-//    public record CategoryDto(String username) {
-//    }
+public record ProductDto(Integer id, String name, String image, CategoryDto categoryDto, String description, BigDecimal price) {
+
+    public record CategoryDto(String name) {
+    }
 }

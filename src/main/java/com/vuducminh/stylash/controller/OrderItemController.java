@@ -28,16 +28,20 @@ public class OrderItemController {
 
     @PostMapping("/createItem")
     public ResponseEntity<String> createOrderItem(@RequestParam("productId") int productId,
-                                          @RequestParam("orderId") long orderId,
-                                          @RequestParam("quantity") int quantity,
-                                          @RequestParam("pricePerUnit") BigDecimal pricePerUnit,
-                                          Authentication authentication) {
+                                                  @RequestParam("orderId") long orderId,
+                                                  @RequestParam("quantity") int quantity,
+                                                  @RequestParam("pricePerUnit") BigDecimal pricePerUnit,
+                                                  @RequestParam("size") String size,
+                                                  @RequestParam("color") String color,
+                                                  @RequestParam("voucher") int voucher,
+                                                  @RequestParam("shipping") int shipping,
+                                                  Authentication authentication) {
 
         Product product = productService.viewById(productId);
 
         Order order = orderService.findById(orderId);
 
-        OrderItem orderItem = new OrderItem(order,product,quantity,pricePerUnit);
+        OrderItem orderItem = new OrderItem(order, product, quantity, pricePerUnit, size, color, voucher, shipping);
 
         orderItemService.createOrderItem(orderItem);
 

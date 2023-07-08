@@ -11,6 +11,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     // Additional custom query methods can be added here
     @Query(value = "SELECT p.* FROM products p JOIN likes l ON p.id = l.product_id GROUP BY p.id ORDER BY COUNT(l.id) DESC LIMIT 5", nativeQuery = true)
     List<Product> findTopLikedProducts();
-    List<Product> findByCategoryName(String categoryName);
+    List<Product> findByCategoryNameContaining(String categoryName);
+    List<Product> findByNameContaining(String name);
+//    List<Product> findAllDesc();
+//    List<Product> findAllAsc();
 }
 

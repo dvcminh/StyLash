@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Component
-public class OrderItemMapperImpl implements OrderItemMapper{
+public class OrderItemMapperImpl implements OrderItemMapper {
 
     @Override
     public OrderItemDto toOrderItemDto(OrderItem orderItem) {
         if (orderItem == null) {
             return null;
         }
-        OrderItemDto.ProductDto productDto = new OrderItemDto.ProductDto(orderItem.getProduct().getName(),orderItem.getProduct().getImage_url());
-        return new OrderItemDto(orderItem.getId(), productDto, orderItem.getQuantity(),orderItem.getPricePerUnit(), orderItem.getVoucherValue(), orderItem.getShippingValue());
+        OrderItemDto.ProductDto productDto = new OrderItemDto.ProductDto(orderItem.getProduct().getName(), orderItem.getProduct().getImage_url());
+        return new OrderItemDto(orderItem.getId(), productDto, orderItem.getQuantity(), orderItem.getPricePerUnit(), orderItem.getVoucherValue(), orderItem.getShippingValue(), orderItem.getSize(), orderItem.getColor());
     }
 
 //    @Component

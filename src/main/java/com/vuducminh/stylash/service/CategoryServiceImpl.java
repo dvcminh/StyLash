@@ -20,6 +20,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> getAllCategoriesByNameContaining(String name) {
+        return categoryRepository.findByNameContaining(name);
+    }
+
+    @Override
     public Category getCategoryById(Integer categoryId) {
         return categoryRepository.findById(categoryId).orElse(null);
     }
@@ -40,9 +45,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Long categoryId) {
-//        categoryRepository.deleteById(categoryId);
-        return;
+    public void deleteCategory(Integer categoryId) {
+        categoryRepository.deleteById(categoryId);
     }
 }
 

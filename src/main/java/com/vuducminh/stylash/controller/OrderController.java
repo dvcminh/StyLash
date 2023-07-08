@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/api/orders")
 public class OrderController {
     private final OrderService orderService;
-    private final UserService userService;
 
     @PostMapping("/create_order")
     public Long checkout(@RequestParam("totalAmount") BigDecimal totalAmount,
@@ -37,7 +36,8 @@ public class OrderController {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
-        order.setPaymentStatus("Pending"); // Trạng thái thanh toán chờ xử lý
+        order.setPaymentStatus("Pending");
+        order.setShippingStatus("Pending");
         order.setShippingAddress(user.getAddress());
         order.setTotalAmount(totalAmount);
 

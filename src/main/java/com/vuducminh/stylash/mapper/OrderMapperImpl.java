@@ -13,12 +13,15 @@ public class OrderMapperImpl implements OrderMapper {
         if (order == null) {
             return null;
         }
-        OrderDto.UserDto userDto = new OrderDto.UserDto(order.getUser().getUsername());
+        OrderDto.UserDto userDto = new OrderDto.UserDto(order.getUser().getUsername(),
+                order.getUser().getFirstname(),
+                order.getUser().getLastname(),
+                order.getUser().getAvatar());
         return new OrderDto(order.getId(),
                 userDto,
                 order.getOrderDate(),
                 order.getTotalAmount(),
                 order.getPaymentStatus(),
-                order.getShippingAddress());
+                order.getShippingStatus());
     }
 }

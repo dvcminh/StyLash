@@ -5,6 +5,8 @@ import com.vuducminh.stylash.model.Order;
 import com.vuducminh.stylash.repository.OrderItemRepository;
 import com.vuducminh.stylash.repository.OrderRepository;
 import com.vuducminh.stylash.user.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +23,29 @@ public class OrderServiceImpl implements OrderService{
 
     private final UserService userService;
 
+    private EntityManager entityManager;
+
     @Override
-    public List<Order> viewAll() {
-        return orderRepository.findAll();
+    public List<Order> findAllOrdersSortedByDateDescending() {
+        String jpql = "SELECT o FROM Order o ORDER BY o.orderDate DESC";
+        TypedQuery<Order> query = entityManager.createQuery(jpql, Order.class);
+        return query.getResultList();
     }
 
-//    @Override
-//    public List<Order> getOrders() {
-//        return orderRepository.findAllByOrderByOrderDateAtDesc();
-//    }
+    @Override
+    public List<Order> viewAll() {
+        return orderRepository.findAllByOrderByOrderDateDesc();
+    }
+
+    @Override
+    public List<Order> findByShippingStatus(String shippingStatus) {
+        return orderRepository.findByShippingStatus(shippingStatus);
+    }
+
+    @Override
+    public List<Order> findByPaymentStatus(String shippingStatus) {
+        return orderRepository.findByPaymentStatus(shippingStatus);
+    }
 
     @Override
     public Order createOrder(Order order) {
@@ -41,10 +57,15 @@ public class OrderServiceImpl implements OrderService{
         return orderRepository.findById(id).get();
     }
 
+    @Override
+    public List<Order> findByUserId(Integer id) {
+        return orderRepository.findByUserId(id);
+    }
+
 
     @Override
-    public List<Order> getOrdersByUser(User user) {
-        return orderRepository.findByUser(user);
+    public List<Order> getOrdersByUser(String email) {
+        return orderRepository.findByUserEmailContaining(email);
     }
 
     @Override
@@ -53,13 +74,13 @@ public class OrderServiceImpl implements OrderService{
 
         List<Order> sortedOrders = orders.stream()
                 .sorted(Comparator.comparing(Order::getOrderDate).reversed())
+                .distinct()
                 .collect(Collectors.toList());
 
         List<Order> recentOrders = sortedOrders.stream()
                 .limit(14)
                 .toList();
 
-        // Group recent orders by date and calculate total revenue for each date
         Map<LocalDate, BigDecimal> revenueByDate = recentOrders.stream()
                 .collect(Collectors.groupingBy(order -> order.getOrderDate().toLocalDate(),
                         Collectors.mapping(Order::getTotalAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
@@ -88,5 +109,15 @@ public class OrderServiceImpl implements OrderService{
     public List<Order> getOrdersContainingText(String text) {
         User user = userService.validateAndGetUserByUsername(text);
         return orderRepository.findByUser(user);
+    }
+
+    @Override
+    public List<Order> getOrdersByUserName(String userName) {
+        return orderRepository.findByUserEmailContaining(userName);
+    }
+
+    @Override
+    public void saveOrder(Order order) {
+        orderRepository.save(order);
     }
 }

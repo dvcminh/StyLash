@@ -1,17 +1,9 @@
 package com.vuducminh.stylash.demo;
 
-import com.vuducminh.stylash.controller.dto.CategoryDto;
-import com.vuducminh.stylash.controller.dto.CreateProductRequest;
-import com.vuducminh.stylash.controller.dto.ProductDto;
-import com.vuducminh.stylash.controller.dto.UserDto;
-import com.vuducminh.stylash.mapper.CategoryMapper;
-import com.vuducminh.stylash.mapper.ProductMapper;
-import com.vuducminh.stylash.mapper.UserMapper;
-import com.vuducminh.stylash.model.Category;
-import com.vuducminh.stylash.model.Product;
-import com.vuducminh.stylash.service.CategoryService;
-import com.vuducminh.stylash.service.ProductService;
-import com.vuducminh.stylash.service.UserService;
+import com.vuducminh.stylash.controller.dto.*;
+import com.vuducminh.stylash.mapper.*;
+import com.vuducminh.stylash.model.*;
+import com.vuducminh.stylash.service.*;
 import com.vuducminh.stylash.user.User;
 import com.vuducminh.stylash.user.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,6 +43,15 @@ public class ManagementController {
     private final ProductService productService;
     private final ProductMapper productMapper;
 
+    private final OrderItemService orderItemService;
+    private final OrderItemMapper orderItemMapper;
+
+    private final OrderService orderService;
+    private final OrderMapper orderMapper;
+
+    private final ReportService reportService;
+    private final ReportMapper reportMapper;
+
     @Operation(
             description = "Get endpoint for manager",
             summary = "This is a summary for management get endpoint",
@@ -85,23 +86,73 @@ public class ManagementController {
                 .collect(Collectors.toList());
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/product")
-    public ProductDto createProduct(@Valid @RequestBody CreateProductRequest createProductRequest) {
-        Product product = productMapper.toProduct(createProductRequest);
-        return productMapper.toProductDto(productService.save(product));
+    @GetMapping("/getOrdersById/{id}")
+    public List<OrderDto> getOrdersById(@PathVariable Integer id) {
+        List<Order> orders = orderService.findByUserId(id);
+
+        return orders.stream()
+                .map(orderMapper::toOrderDto)
+                .collect(Collectors.toList());
     }
 
-    @PostMapping
-    public String post() {
-        return "POST:: management controller";
+    @GetMapping("/getOrderDetail/{id}")
+    public List<OrderItemDto> getOrderDetailById(@PathVariable Long id) {
+        List<OrderItem> orderItems = orderItemService.findByOrderId(id);
+
+        return orderItems.stream()
+                .map(orderItemMapper::toOrderItemDto)
+                .collect(Collectors.toList());
     }
-    @PutMapping
-    public String put() {
-        return "PUT:: management controller";
+
+    @PutMapping("/{orderId}/shipping-status")
+    public ResponseEntity<String> updateShippingStatus(@PathVariable Long orderId, @RequestBody String shippingStatus) {
+        Order order = orderService.findById(orderId);
+        if (order == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
+        }
+
+        order.setShippingStatus(shippingStatus);
+        orderService.saveOrder(order);
+
+        return ResponseEntity.ok("Shipping status updated successfully");
     }
-    @DeleteMapping
-    public String delete() {
-        return "DELETE:: management controller";
+
+    @PutMapping("/editUser")
+    public UserDto editUser(@RequestParam(value = "firstname", required = false) String firstname,
+                            @RequestParam(value = "lastname", required = false) String lastname,
+                            @RequestParam(value = "address", required = false) String address,
+                            @RequestParam(value = "phone", required = false) String phone,
+                            @RequestParam(value = "avatar", required = false) String avatar,
+                            @AuthenticationPrincipal User currentUser) {
+        User user = userService.validateAndGetUserByUsername(currentUser.getUsername());
+
+        user.setFirstname(firstname);
+        user.setLastname(lastname);
+        user.setAddress(address);
+        user.setPhone_number(phone);
+        user.setAvatar(avatar);
+
+        userService.updateUser(user);
+
+        return userMapper.toUserDto(user);
+    }
+
+
+
+    @PostMapping("/createReport")
+    public ResponseEntity<String> createReport(@RequestParam(value = "avatar") String avatar,
+                                               @RequestParam(value = "title") String title,
+                                               @RequestParam(value = "description") String description,
+                                               @RequestParam(value = "username") String username) {
+        User user = userService.validateAndGetUserByUsername(username);
+
+        Report report = new Report();
+        report.setImage(avatar);
+        report.setTitle(title);
+        report.setDescription(description);
+        report.setUser(user);
+
+        reportService.save(report);
+        return ResponseEntity.ok("Success");
     }
 }

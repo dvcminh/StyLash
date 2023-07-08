@@ -54,10 +54,27 @@ public class ProductController {
     }
 
     @GetMapping("/getAllProducts")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.viewAll();
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(value = "name", required = false) String name,
+                                                        @RequestParam(value = "sort", required = false) String sort) {
+        List<Product> products;
+        if(sort != null){
+            if (sort.equals("asc")) {
+                products = productService.getProductAsc();
+            }
+            else {
+                products = productService.getProductDesc();
+            }
+        }
+        else if(name != null) {
+            products = productService.findbyNameContaining(name);
+        }
+        else {
+            products = productService.viewAll();
+        }
+
         return ResponseEntity.ok(products);
     }
+
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String categoryName) {
@@ -86,12 +103,8 @@ public class ProductController {
     public ResponseEntity<Boolean> likedProduct(@RequestParam("productId") Integer productId, @AuthenticationPrincipal User user) {
         Product product = productService.viewById(productId);
         if (!likeService.isProductLikedByUser(user, product)) {
-            // Người dùng chưa thích sản phẩm, tiến hành thêm vào cơ sở dữ liệu
             return ResponseEntity.ok(false);
         } else {
-            // Người dùng đã thích sản phẩm rồi, xử lý tùy ý tại đây
-            // Ví dụ: Hiển thị thông báo lỗi, không làm gì hoặc gửi thông báo về cho người dùng.
-            // Trong ví dụ này, tôi sẽ in ra thông báo lỗi lên console.
             return ResponseEntity.ok(true);
         }
     }
@@ -102,14 +115,11 @@ public class ProductController {
         Like like = new Like(user, product);
         // Kiểm tra xem người dùng đã thích sản phẩm chưa
         if (!likeService.isProductLikedByUser(user, product)) {
-            // Người dùng chưa thích sản phẩm, tiến hành thêm vào cơ sở dữ liệu
             likeService.likeProduct(like);
             System.err.println("Thích sản phẩm thành công.");
             return ResponseEntity.ok(true);
         } else {
-            // Người dùng đã thích sản phẩm rồi, xử lý tùy ý tại đây
-            // Ví dụ: Hiển thị thông báo lỗi, không làm gì hoặc gửi thông báo về cho người dùng.
-            // Trong ví dụ này, tôi sẽ in ra thông báo lỗi lên console.
+
             likeService.unlikeProduct(user, product);
             System.err.println("Người dùng đã thích sản phẩm này.");
             return ResponseEntity.ok(false);

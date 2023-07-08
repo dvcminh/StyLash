@@ -10,18 +10,26 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderService {
+    List<Order> findAllOrdersSortedByDateDescending();
+
     List<Order> viewAll();
 
-//    List<Order> getOrders();
+    List<Order> findByShippingStatus(String shippingStatus);
+    List<Order> findByPaymentStatus(String shippingStatus);
 
     Order createOrder(Order order);
     Order findById(Long id);
+    List<Order> findByUserId(Integer id);
 //    Order createOrderFromCartItems(List<Product> cartItems, User user);
-    List<Order> getOrdersByUser(User user);
+    List<Order> getOrdersByUser(String email);
 
     List<DailyRevenueDTO> calculateDailyRevenue();
 
     BigDecimal calculateTotalRevenue();
 
     List<Order> getOrdersContainingText(String text);
+
+    List<Order> getOrdersByUserName(String userName);
+
+    void saveOrder(Order order);
 }

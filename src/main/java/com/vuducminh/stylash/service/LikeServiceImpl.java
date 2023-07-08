@@ -4,13 +4,12 @@ import com.vuducminh.stylash.model.Like;
 import com.vuducminh.stylash.model.Product;
 import com.vuducminh.stylash.repository.LikeRepository;
 import com.vuducminh.stylash.user.User;
-import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,26 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public Like likeProduct(Like like) {
         return likeRepository.save(like);
+    }
+
+    @Override
+    public Optional<Like> findById(Integer id) {
+        return likeRepository.findById(id);
+    }
+
+    @Override
+    public List<Like> getAll() {
+        return likeRepository.findAll();
+    }
+
+    @Override
+    public List<Like> findByNameContaining(String name) {
+        return likeRepository.findByUserEmailContaining(name);
+    }
+
+    @Override
+    public void detele(Like like) {
+        likeRepository.delete(like);
     }
 }
 

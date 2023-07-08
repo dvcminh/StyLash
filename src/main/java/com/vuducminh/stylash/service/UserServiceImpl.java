@@ -18,10 +18,24 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+
     public Optional<User> getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         return userRepository.findByEmail(username);
+    }
+
+    @Override
+    public List<User> getUsersByRole(Role role) {
+        return userRepository.findByRole(role);
+    }
+    @Override
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
+    @Override
+    public List<User> getUsersByRoleAndName(Role role, String name) {
+        return userRepository.findByRoleAndLastnameContainingIgnoreCase(role, name);
     }
 
     @Override

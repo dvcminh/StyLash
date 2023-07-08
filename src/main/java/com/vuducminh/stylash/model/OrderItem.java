@@ -32,12 +32,18 @@ public class OrderItem {
     private BigDecimal pricePerUnit;
     private Integer voucherValue;
     private Integer shippingValue;
+    private String size;
+    private String color;
 
-    public OrderItem(Order order, Product product, Integer quantity, BigDecimal pricePerUnit) {
+    public OrderItem(Order order, Product product, Integer quantity, BigDecimal pricePerUnit, String size, String color, Integer voucherValue, Integer shippingValue) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
         this.pricePerUnit = pricePerUnit;
+        this.size = size;
+        this.color = color;
+        this.voucherValue = voucherValue;
+        this.shippingValue = shippingValue;
     }
 }
 

@@ -9,9 +9,12 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    // Additional custom query methods can be added here
+    List<Order> findByUserEmailContaining(String email);
     List<Order> findByUser(User user);
     Optional<Order> findById(Long id);
-
+    List<Order> findByUserId(Integer id);
+    List<Order> findByShippingStatus(String shippingStatus);
+    List<Order> findByPaymentStatus(String paymentStatus);
+    List<Order> findAllByOrderByOrderDateDesc();
 }
 

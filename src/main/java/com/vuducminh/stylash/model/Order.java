@@ -26,14 +26,16 @@ public class Order {
     private LocalDateTime orderDate;
     private BigDecimal totalAmount;
     private String paymentStatus;
+    private String shippingStatus;
     private String shippingAddress;
 
-    public Order(User user, LocalDateTime orderDate, BigDecimal totalAmount, String paymentStatus, String shippingAddress) {
+    public Order(User user, LocalDateTime orderDate, BigDecimal totalAmount, String paymentStatus, String shippingAddress, String shippingStatus) {
         this.user = user;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
         this.paymentStatus = paymentStatus;
         this.shippingAddress = shippingAddress;
+        this.shippingStatus = shippingStatus;
     }
 }
 

@@ -79,7 +79,10 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.cloudinary</groupId>
 			<artifactId>cloudinary-http44</artifactId>
@@ -106,6 +109,8 @@
 			<artifactId>cloudinary-http45</artifactId>
 			<version>1.33.0</version>
 		</dependency>
+
+
 	</dependencies>
 
 	<build>

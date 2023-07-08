@@ -1,11 +1,13 @@
 package com.vuducminh.stylash.service;
 
 import com.cloudinary.Cloudinary;
+import com.vuducminh.stylash.exception.OrderNotFoundException;
 import com.vuducminh.stylash.model.Category;
 import com.vuducminh.stylash.model.Product;
 import com.vuducminh.stylash.repository.LikeRepository;
 import com.vuducminh.stylash.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
     public String uploadProductImage(MultipartFile imageFile) throws IOException {
         Map<String, String> params = new HashMap<>();
-        params.put("folder", "product_images"); // Thay thế "product_images" bằng tên thư mục bạn muốn lưu ảnh trong Cloudinary
+        params.put("folder", "product_images");
 
         Map<?, ?> uploadResult = cloudinary.uploader().upload(imageFile.getBytes(), params);
 
@@ -35,6 +37,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getTopLikedProducts() {
         return productRepository.findTopLikedProducts();
+    }
+
+    @Override
+    public List<Product> getProductDesc() {
+        return productRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+    }
+
+    @Override
+    public List<Product> getProductAsc() {
+        return productRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     @Override
@@ -49,6 +61,11 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
 
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> findbyNameContaining(String name) {
+        return productRepository.findByNameContaining(name);
     }
 
 //    @Override
@@ -78,7 +95,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void deleteProduct(Product product) {
+        productRepository.delete(product);
+    }
+
+    @Override
+    public Product findById(Integer id){
+        return productRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(String.format("Order with id %s not found", id)));
+    }
+
+    @Override
     public List<Product> findProductsByCategoryName(String categoryName) {
-        return productRepository.findByCategoryName(categoryName);
+        return productRepository.findByCategoryNameContaining(categoryName);
     }
 }

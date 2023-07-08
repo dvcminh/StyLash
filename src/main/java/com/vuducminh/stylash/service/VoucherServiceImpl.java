@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,11 @@ public class VoucherServiceImpl implements VoucherService{
     @Override
     public Voucher getVoucherByCode(String code) {
         return voucherRepository.findByCode(code);
+    }
+
+    @Override
+    public List<Voucher> getVoucherByCodeContaining(String name) {
+        return voucherRepository.findByCodeContaining(name);
     }
 
     @Override
@@ -34,8 +40,8 @@ public class VoucherServiceImpl implements VoucherService{
     }
 
     @Override
-    public Voucher getVoucherById(Long id) {
-        return null;
+    public Optional<Voucher> getVoucherById(Long id) {
+        return voucherRepository.findById(id);
     }
 
     @Override
@@ -44,12 +50,12 @@ public class VoucherServiceImpl implements VoucherService{
     }
 
     @Override
-    public void updateVoucher(Voucher voucher) {
-
+    public Voucher updateVoucher(Voucher voucher) {
+        return voucherRepository.save(voucher);
     }
 
     @Override
-    public void deleteVoucher(Long id) {
-
+    public void deleteVoucher(Voucher voucher) {
+        voucherRepository.delete(voucher);
     }
 }

@@ -1,15 +1,14 @@
 package com.vuducminh.stylash.controller;
 
-import com.vuducminh.stylash.model.Product;
 import com.vuducminh.stylash.model.Voucher;
 import com.vuducminh.stylash.service.VoucherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,9 +18,19 @@ public class VoucherController {
     private final VoucherService voucherService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<Voucher>> getAllVoucher() {
-        List<Voucher> vouchers = voucherService.getAllVouchers();
+    public ResponseEntity<List<Voucher>> getAllVoucher(@RequestParam(value = "name", required = false) String name) {
+        List<Voucher> vouchers;
+        if (name != null) {
+            vouchers = voucherService.getVoucherByCodeContaining(name);
+        } else {
+            vouchers = voucherService.getAllVouchers();
+        }
         return ResponseEntity.ok(vouchers);
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<Optional<Voucher>> getVoucherById(@PathVariable Long id) {
+        return ResponseEntity.ok(voucherService.getVoucherById(id));
     }
 
     @PostMapping("/check_voucher")

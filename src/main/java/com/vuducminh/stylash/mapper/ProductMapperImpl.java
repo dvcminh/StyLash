@@ -9,21 +9,11 @@ import org.springframework.stereotype.Service;
 public class ProductMapperImpl implements ProductMapper{
 
     @Override
-    public Product toProduct(CreateProductRequest createProductRequest) {
-//        if (createProductRequest == null) {
-//            return null;
-//        }
-//        return new Product(createProductRequest.getName(), createProductRequest.getImage_url());
-        return null;
-    }
-
-    @Override
     public ProductDto toProductDto(Product product) {
-//        if (product == null) {
-//            return null;
-//        }
-//        ProductDto.CategoryDto categoryDto = new ProductDto.CategoryDto(product.getCategory().getName());
-//        return new ProductDto(product.getId(), product.getName(), product.getImage_url());
-        return null;
+        if (product == null) {
+            return null;
+        }
+        ProductDto.CategoryDto categoryDto = new ProductDto.CategoryDto(product.getCategory().getName());
+        return new ProductDto(product.getId(), product.getName(), product.getImage_url(), categoryDto, product.getDescription(),product.getPrice());
     }
 }

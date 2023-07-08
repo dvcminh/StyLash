@@ -1,5 +1,6 @@
 package com.vuducminh.stylash.service;
 
+import com.vuducminh.stylash.user.Role;
 import com.vuducminh.stylash.user.User;
 
 import java.util.List;
@@ -12,6 +13,10 @@ public interface UserService {
     User getUserById(Integer userId);
     User validateAndGetUserByUsername(String username);
 
+    List<User> getUsersByRole(Role role);
+
+    List<User> getUsersByRoleAndName(Role role, String name);
+    void deleteUser(User user);
     int countManagers();
 
     Optional<User> getUserByUsername(String username);

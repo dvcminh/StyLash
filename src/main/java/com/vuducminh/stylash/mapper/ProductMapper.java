@@ -6,7 +6,6 @@ import com.vuducminh.stylash.model.Product;
 
 public interface ProductMapper {
 
-    Product toProduct(CreateProductRequest createProductRequest);
 
     ProductDto toProductDto(Product product);
 }

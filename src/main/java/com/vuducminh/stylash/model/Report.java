@@ -1,5 +1,6 @@
 package com.vuducminh.stylash.model;
 
+import com.vuducminh.stylash.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,19 +12,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "categories")
-public class Category {
+@Table(name = "reports")
+public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    private String name;
+    private String image;
+
+    private String title;
 
     private String description;
 
-    public Category(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // Constructors, getters, setters
+
 }
+
