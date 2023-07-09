@@ -39,6 +39,11 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    public List<Like> findByProductId(Integer id) {
+        return likeRepository.findByProductId(id);
+    }
+
+    @Override
     public List<Like> getAll() {
         return likeRepository.findAll();
     }
@@ -51,6 +56,11 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public void detele(Like like) {
         likeRepository.delete(like);
+    }
+
+    @Override
+    public List<Like> findByUserId(Integer id) {
+        return likeRepository.findByUserId(id);
     }
 }
 

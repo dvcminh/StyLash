@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public interface UserService {
     List<User> getAllUsers();
+
+    List<User> getTopUsersWithHighestTotalAmount(int limit);
+
     public Optional<User> getAuthenticatedUser();
 
     User getUserById(Integer userId);

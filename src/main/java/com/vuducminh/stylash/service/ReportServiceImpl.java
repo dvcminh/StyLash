@@ -20,6 +20,11 @@ public class ReportServiceImpl implements ReportService{
     }
 
     @Override
+    public List<Report> findAllByTitle(String title) {
+        return reportRepository.findByTitleContaining(title);
+    }
+
+    @Override
     public Optional<Report> findById(Long id) {
         return reportRepository.findById(id);
     }

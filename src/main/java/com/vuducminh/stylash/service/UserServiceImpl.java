@@ -4,6 +4,9 @@ import com.vuducminh.stylash.exception.UserNotFoundException;
 import com.vuducminh.stylash.user.Role;
 import com.vuducminh.stylash.user.User;
 import com.vuducminh.stylash.user.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +21,29 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public List<User> getTopUsersByTotalAmount(int limit) {
+        String queryStr = "SELECT o.user, SUM(o.totalAmount) AS totalAmount " +
+                "FROM Order o " +
+                "GROUP BY o.user " +
+                "ORDER BY totalAmount DESC";
+        TypedQuery<Object[]> query = entityManager.createQuery(queryStr, Object[].class);
+        query.setMaxResults(limit);
+
+        List<Object[]> results = query.getResultList();
+        List<User> topUsers = results.stream()
+                .map(result -> (User) result[0])
+                .toList();
+
+        return topUsers;
+    }
+
+    @Override
+    public List<User> getTopUsersWithHighestTotalAmount(int limit) {
+        return this.getTopUsersByTotalAmount(limit);
+    }
 
     public Optional<User> getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

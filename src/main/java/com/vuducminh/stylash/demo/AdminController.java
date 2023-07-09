@@ -5,10 +5,7 @@ import com.vuducminh.stylash.mapper.OrderMapper;
 import com.vuducminh.stylash.mapper.ProductMapper;
 import com.vuducminh.stylash.mapper.ReportMapper;
 import com.vuducminh.stylash.mapper.UserMapper;
-import com.vuducminh.stylash.model.Category;
-import com.vuducminh.stylash.model.Order;
-import com.vuducminh.stylash.model.Product;
-import com.vuducminh.stylash.model.Voucher;
+import com.vuducminh.stylash.model.*;
 import com.vuducminh.stylash.service.*;
 import com.vuducminh.stylash.user.Role;
 import com.vuducminh.stylash.user.User;
@@ -71,6 +68,14 @@ public class AdminController {
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.viewAll();
         return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/top-3-highest-spenders")
+    public List<UserDto> getTop3HighestSpenders() {
+        int limit = 3;
+        return userService.getTopUsersWithHighestTotalAmount(limit).stream()
+                .map(userMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/total-revenue")
@@ -279,10 +284,26 @@ public class AdminController {
     }
 
     @GetMapping("/getAllReport")
-    public List<ReportDto> getAllReports() {
-        return reportService.findAll().stream()
+    public List<ReportDto> getAllReports(@RequestParam(value = "name",required = false)String name) {
+        List<Report> reports;
+        if (name != null) {
+            reports = reportService.findAllByTitle(name);
+        }
+        else {
+            reports = reportService.findAll();
+        }
+        return reports.stream()
                 .map(reportMapper::toReportDto)
                 .collect(Collectors.toList());
+    }
+
+    @DeleteMapping("/deleteReport/{id}")
+    public ResponseEntity<String> deleteReport(@PathVariable Long id) {
+        System.out.println("id");
+        System.out.println(id);
+        Report report = reportService.findById(id).orElseThrow(() -> new RuntimeException("Report not found with id: " + id));
+        reportService.deleteReport(report);
+        return ResponseEntity.ok("Delete succesfully");
     }
 
     @PostMapping

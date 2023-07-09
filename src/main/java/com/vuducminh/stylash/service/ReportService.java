@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface ReportService {
     List<Report> findAll();
+    List<Report> findAllByTitle(String title);
     Optional<Report> findById(Long id);
     void deleteReport(Report report);
     Report save(Report report);

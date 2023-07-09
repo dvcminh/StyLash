@@ -1,5 +1,6 @@
 package com.vuducminh.stylash.controller;
 
+import com.vuducminh.stylash.controller.dto.UserDto;
 import com.vuducminh.stylash.service.EmailService;
 import com.vuducminh.stylash.service.UserService;
 import com.vuducminh.stylash.user.User;
@@ -80,6 +81,7 @@ public class UserController {
 
         return new ResponseEntity<>("An email with the new password has been sent to the user.", HttpStatus.OK);
     }
+
 
     private String generateRandomPassword() {
         int password = (int) (Math.random() * 900000) + 100000;

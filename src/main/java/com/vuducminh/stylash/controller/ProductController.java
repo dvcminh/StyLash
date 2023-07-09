@@ -56,25 +56,36 @@ public class ProductController {
     @GetMapping("/getAllProducts")
     public ResponseEntity<List<Product>> getAllProducts(@RequestParam(value = "name", required = false) String name,
                                                         @RequestParam(value = "sort", required = false) String sort) {
-        List<Product> products;
-        if(sort != null){
-            if (sort.equals("asc")) {
+        List<Product> products = null;
+
+        switch (sort) {
+            case "all" -> {
+                products = productService.viewAll();
+                if (name != "") {
+                    products = productService.findbyNameContaining(name);
+                }
+            }
+            case "asc" -> {
                 products = productService.getProductAsc();
+                if (name != "") {
+                    products = productService.findbyNameContaining(name);
+                }
             }
-            else {
+            case "desc" -> {
                 products = productService.getProductDesc();
+                if (name != "") {
+                    products = productService.findbyNameContaining(name);
+                }
             }
-        }
-        else if(name != null) {
-            products = productService.findbyNameContaining(name);
-        }
-        else {
-            products = productService.viewAll();
         }
 
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/countLike/{id}")
+    public ResponseEntity<Integer> countLike(@PathVariable Integer id) {
+        return ResponseEntity.ok(likeService.findByProductId(id).size());
+    }
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable String categoryName) {

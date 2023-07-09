@@ -6,10 +6,13 @@ import com.vuducminh.stylash.model.Category;
 import com.vuducminh.stylash.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +28,12 @@ public class CategoryController {
             return categoryService.getAllCategoriesByNameContaining(name);
         }
         return categoryService.getAllCategories();
+    }
+
+    @GetMapping("/totals")
+    public ResponseEntity<Map<String, BigDecimal>> getCategoryTotalAmounts() {
+        Map<String, BigDecimal> categoryTotalAmounts = categoryService.getCategoryTotalAmounts();
+        return new ResponseEntity<>(categoryTotalAmounts, HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")

@@ -27,12 +27,4 @@ public class ReportController {
                 .orElseThrow(() -> new RuntimeException("Like not found with id: " + id));
     }
 
-
-
-    @DeleteMapping("/deleteReport/:id")
-    public ResponseEntity<String> deleteReport(@PathVariable Long id) {
-        Report report = reportService.findById(id).orElseThrow(() -> new RuntimeException("Like not found with id: " + id));
-        reportService.deleteReport(report);
-        return ResponseEntity.ok("Delete succesfully");
-    }
 }

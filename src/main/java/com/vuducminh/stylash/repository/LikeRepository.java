@@ -18,4 +18,6 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
     int countByProduct(Product product);
 
     List<Like> findByUserEmailContaining(String name);
+    List<Like> findByProductId(Integer id);
+    List<Like> findByUserId(Integer id);
 }

@@ -3,6 +3,7 @@ package com.vuducminh.stylash.controller;
 import com.vuducminh.stylash.model.Voucher;
 import com.vuducminh.stylash.service.VoucherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,12 +35,12 @@ public class VoucherController {
     }
 
     @PostMapping("/check_voucher")
-    public BigDecimal getVoucherByCode(@RequestParam("voucherCode") String voucherCode) {
+    public ResponseEntity<BigDecimal> getVoucherByCode(@RequestParam("voucherCode") String voucherCode) {
         Voucher voucher = voucherService.getVoucherByCode(voucherCode);
         if (voucher != null) {
-            return voucher.getDiscount();
+            return ResponseEntity.ok(voucher.getDiscount());
         } else {
-            return null;
+            return ResponseEntity.ok(BigDecimal.valueOf(0));
         }
     }
 

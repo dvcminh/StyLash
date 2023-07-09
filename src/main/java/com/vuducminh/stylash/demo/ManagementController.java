@@ -19,11 +19,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,6 +36,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Tag(name = "Management")
 public class ManagementController {
+
+//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     private final UserService userService;
     private final UserMapper userMapper;
@@ -51,6 +58,9 @@ public class ManagementController {
 
     private final ReportService reportService;
     private final ReportMapper reportMapper;
+
+    private final LikeService likeService;
+    private final LikeMapper likeMapper;
 
     @Operation(
             description = "Get endpoint for manager",
@@ -83,6 +93,13 @@ public class ManagementController {
     public List<CategoryDto> getCategories() {
         return categoryService.getAllCategories().stream()
                 .map(categoryMapper::toCategoryDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/getWishlist/{id}")
+    public List<LikeDto> getWishlist(@PathVariable Integer id) {
+        return likeService.findByUserId(id).stream()
+                .map(likeMapper::toLikeDto)
                 .collect(Collectors.toList());
     }
 
@@ -154,5 +171,18 @@ public class ManagementController {
 
         reportService.save(report);
         return ResponseEntity.ok("Success");
+    }
+
+    @PutMapping("/changePassword")
+    public ResponseEntity<String> changePassword(@RequestParam(value = "oldpassword") String oldpassword,
+                                                 @RequestParam(value = "newpassword") String newpassword,
+                                                 @RequestParam(value = "email") String email) {
+        User currentUser = userService.validateAndGetUserByUsername(email);
+        if (!passwordEncoder.matches(oldpassword, currentUser.getPassword())) {
+            return ResponseEntity.ok("Wrong old password");
+        }
+        currentUser.setPassword(passwordEncoder.encode(newpassword));
+        userService.updateUser(currentUser);
+        return ResponseEntity.ok("Update password successfully");
     }
 }

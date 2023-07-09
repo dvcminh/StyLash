@@ -73,27 +73,37 @@ public class OrderServiceImpl implements OrderService{
         List<Order> orders = orderRepository.findAll();
 
         List<Order> sortedOrders = orders.stream()
-                .sorted(Comparator.comparing(Order::getOrderDate).reversed())
+                .sorted(Comparator.comparing(Order::getOrderDate))
                 .distinct()
                 .collect(Collectors.toList());
 
+
         List<Order> recentOrders = sortedOrders.stream()
-                .limit(14)
+                .limit(28)
                 .toList();
 
         Map<LocalDate, BigDecimal> revenueByDate = recentOrders.stream()
-                .collect(Collectors.groupingBy(order -> order.getOrderDate().toLocalDate(),
-                        Collectors.mapping(Order::getTotalAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+                .collect(Collectors.groupingBy(
+                        order -> order.getOrderDate().toLocalDate(),
+                        LinkedHashMap::new,
+                        Collectors.mapping(
+                                Order::getTotalAmount,
+                                Collectors.reducing(BigDecimal.ZERO, BigDecimal::add)
+                        )
+                ));
 
-        List<DailyRevenueDTO> dailyRevenues = new ArrayList<>();
-        for (Map.Entry<LocalDate, BigDecimal> entry : revenueByDate.entrySet()) {
-            DailyRevenueDTO dailyRevenue = new DailyRevenueDTO();
-            dailyRevenue.setDate(entry.getKey());
-            dailyRevenue.setRevenue(entry.getValue());
-            dailyRevenues.add(dailyRevenue);
-        }
+
+        List<DailyRevenueDTO> dailyRevenues = revenueByDate.entrySet().stream()
+                .map(entry -> {
+                    DailyRevenueDTO dailyRevenue = new DailyRevenueDTO();
+                    dailyRevenue.setDate(entry.getKey());
+                    dailyRevenue.setRevenue(entry.getValue());
+                    return dailyRevenue;
+                })
+                .collect(Collectors.toList());
 
         return dailyRevenues;
+
     }
 
 
