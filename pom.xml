@@ -14,7 +14,7 @@
 	<name>StyLash</name>
 	<description>backend for e-commercial web</description>
 	<properties>
-		<java.version>14</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
